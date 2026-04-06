@@ -1,0 +1,158 @@
+# EnviroLab – GitHub + Vercel Setup
+
+## 1. Create the project locally
+
+```bash
+npm create vite@latest envirolab -- --template react
+cd envirolab
+npm install
+```
+
+## 2. Replace files
+
+Delete everything inside `src/` and replace with the files below.
+
+---
+
+## File: `src/main.jsx`
+
+```jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+```
+
+---
+
+## File: `src/App.jsx`
+
+Paste the full App component code here.
+The only change needed at the **top** of the file is to add:
+
+```jsx
+import React, { useState, useRef, useMemo, useEffect, memo } from "react";
+```
+
+Replace the existing line:
+```jsx
+import { useState, useRef, useMemo, useEffect, memo } from "react";
+```
+
+> Everything else in App.jsx stays exactly as-is from the Claude artifact.
+
+---
+
+## File: `index.html` (already exists — just verify the root div)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EnviroLab</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
+```
+
+---
+
+## File: `vite.config.js` (already exists — no changes needed)
+
+```js
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+});
+```
+
+---
+
+## File: `package.json` — verify these dependencies exist
+
+```json
+{
+  "name": "envirolab",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.0.0"
+  }
+}
+```
+
+---
+
+## 3. Test locally
+
+```bash
+npm run dev
+```
+
+Open http://localhost:5173 — should look identical to the Claude artifact.
+
+---
+
+## 4. Push to GitHub
+
+```bash
+git init
+git add .
+git commit -m "Initial EnviroLab commit"
+gh repo create envirolab --public --push --source=.
+```
+
+> If you don't have the GitHub CLI, create the repo manually on github.com,
+> then:
+> ```bash
+> git remote add origin https://github.com/YOUR_USERNAME/envirolab.git
+> git branch -M main
+> git push -u origin main
+> ```
+
+---
+
+## 5. Deploy with Vercel
+
+1. Go to [vercel.com](https://vercel.com) → **Add New Project**
+2. Import your `envirolab` GitHub repo
+3. Vercel auto-detects Vite — keep default settings:
+   - **Framework**: Vite
+   - **Build command**: `vite build`
+   - **Output directory**: `dist`
+4. Click **Deploy**
+
+Every `git push` to `main` will trigger an automatic redeploy.
+
+---
+
+## Summary of the only code change required
+
+| File | Change |
+|------|--------|
+| `src/App.jsx` | Add `React` to the import: `import React, { useState, ... } from "react"` |
+| `src/main.jsx` | New file (standard Vite React entry point) |
+| `index.html` | Already created by Vite — no changes |
+| `vite.config.js` | Already created by Vite — no changes |
